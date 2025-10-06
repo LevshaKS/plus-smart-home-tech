@@ -12,7 +12,7 @@ public abstract class BaseSensorEventHandler implements SensorEventHandler {
 
     private final KafkaEventProducer producer;
 
-    private String topic = "telemetry.sensors.v1";
+    private final String topic = "telemetry.sensors.v1";
 
     @Override
     public void handler(SensorEvent sensorEventHandler) {

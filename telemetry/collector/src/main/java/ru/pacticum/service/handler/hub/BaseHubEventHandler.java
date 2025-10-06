@@ -12,7 +12,7 @@ public abstract class BaseHubEventHandler implements HubEventHandler {
 
     private final KafkaEventProducer producer;
 
-    private String topic = "telemetry.hubs.v1";
+    private final String topic = "telemetry.hubs.v1";
 
 
     @Override
