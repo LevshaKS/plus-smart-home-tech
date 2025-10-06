@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.yandex.practicum.collector.model.hubEvent.HubEvent;
 import ru.yandex.practicum.collector.model.sensorEvent.SensorEvent;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import ru.yandex.practicum.collector.service.CollectorService;
 
 @Slf4j
 @Controller
-@Validated
 @RequestMapping(path = "/events")
 public class EventController {
 
