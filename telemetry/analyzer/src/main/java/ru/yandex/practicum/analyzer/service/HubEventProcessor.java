@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.analyzer.configuration.KafkaConfig;
 import ru.yandex.practicum.analyzer.handler.HubHandler;
@@ -27,6 +28,7 @@ public class HubEventProcessor implements Runnable {
 
     private final Duration pollTimeout;
     private final List<String> topics;
+
 
     public HubEventProcessor(KafkaConfig config, KafkaConsumer<String, HubEventAvro> consumer, Set<HubHandler> hubHandlers , Duration pollTimeout, List<String> topics) {
         this.hubHandlers = hubHandlers.stream().collect(Collectors.toMap(HubHandler::getMessageType, Function.identity()));
