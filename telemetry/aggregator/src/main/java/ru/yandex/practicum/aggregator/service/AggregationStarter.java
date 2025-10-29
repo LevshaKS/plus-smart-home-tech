@@ -5,14 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
+
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Component;
 
-//import ru.yandex.practicum.aggregator.config.KafkaConfig;
+
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
@@ -31,11 +32,11 @@ public class AggregationStarter {
     private final Consumer<String, SensorEventAvro> consumer;
     private final SnapshotService snapshotService;
 
+    @Value("${topic.telemetry-sensors}")
+    private String topicTelemetrySensors;
 
-    private String topicTelemetrySensors = "telemetry.sensors.v1";
-
-
-    private String topicTelemetrySnapshots = "telemetry.snapshots.v1";
+    @Value("${topic.telemetry-snapshots}")
+    private String topicTelemetrySnapshots;
 
     public void start() {
         try {
