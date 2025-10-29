@@ -1,0 +1,14 @@
+package ru.yandex.practicum.model;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class TemperatureSensor {
+
+    private String id;
+
+    private MinMaxValue temperature;
+
+}
