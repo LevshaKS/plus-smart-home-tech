@@ -25,46 +25,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AggregationStarter {
 
-//        private final KafkaProducer<String, SensorsSnapshotAvro> producer;
-//    private  final KafkaConsumer<String, SensorEventAvro> consumer;
-//    private final SnapshotService snapshotService;
-//    private final List<String> topicsConsumer;
-//    private final Duration pollTimeout;
-//    private final String topicsProducer;
-
-//    public AggregationStarter (SnapshotService snapshotService, KafkaConfig config, List<String> topics, Duration pollTimeout, List<String> topicsProducer){
-//        this.snapshotService =snapshotService;
-//
-//final  KafkaConfig.ProducerConfig producerConfig =
-//        config.getProducers().get(this.getClass().getSimpleName());
-//
-//        final KafkaConfig.ConsumerConfig consumerConfig =
-//                config.getConsumers().get(this.getClass().getSimpleName());
-//
-//        this.consumer= new KafkaConsumer<>(consumerConfig.getProperties());
-//        this.topicsConsumer = consumerConfig.getTopics();
-//        this.pollTimeout = consumerConfig.getPollTimeout();
-//
-//        this.topicsProducer =producerConfig.getTopics();
-//        this.producer = new KafkaProducer<>(producerConfig.getProperties());
-//
-//
-//
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            log.info("сработал хук на завершение JVM. перерывается консьюмер");
-//            consumer.wakeup();
-//        }));
-//
-//    }
 
     // ... объявление полей и конструктора ...
     private final Producer<String, SensorsSnapshotAvro> producer;
     private final Consumer<String, SensorEventAvro> consumer;
     private final SnapshotService snapshotService;
-
-    // ... объявление полей и конструктора ...
-//    private final Producer<String, SensorsSnapshotAvro> producer;
-//    private final Consumer<String, SensorEventAvro> consumer;
 
 
     private String topicTelemetrySensors = "telemetry.sensors.v1";
@@ -81,7 +46,7 @@ public class AggregationStarter {
                 log.info("сработал хук на завершение JVM. перерывается консьюмер");
                 consumer.wakeup();
 
-                //  consumer.subscribe(topicsConsumer);
+
             }));
             while (true) {
                 ConsumerRecords<String, SensorEventAvro> records = consumer.poll(Duration.ofMillis(1000));
