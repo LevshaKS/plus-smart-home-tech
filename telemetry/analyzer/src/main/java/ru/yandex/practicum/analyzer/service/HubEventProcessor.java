@@ -1,6 +1,6 @@
 package ru.yandex.practicum.analyzer.service;
 
-import lombok.AllArgsConstructor;
+
 
 
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,7 @@ import java.time.Duration;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 
 
 @Component
