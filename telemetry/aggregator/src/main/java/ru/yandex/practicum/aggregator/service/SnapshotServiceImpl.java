@@ -1,9 +1,7 @@
 package ru.yandex.practicum.aggregator.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.stereotype.Service;
-//import ru.yandex.practicum.aggregator.config.KafkaConfig;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorStateAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
@@ -18,8 +16,6 @@ import java.util.Optional;
 
 public class SnapshotServiceImpl implements SnapshotService {
     private final Map<String, SensorsSnapshotAvro> snapshotsMap = new HashMap<>(); //мапа снимков состояния
-
-
 
 
     @Override
@@ -44,7 +40,7 @@ public class SnapshotServiceImpl implements SnapshotService {
                     .build();
             snapshotsMap.put(hubId, snapshot);  //добавляем снимок  в мапу снимков по хаб ид
 //возращаем снимок
-           log.info("создали новый снимок " + snapshot.toString());
+            log.info("создали новый снимок {} ", snapshot.toString());
             return Optional.of(snapshot);
 
         } else {
@@ -55,7 +51,7 @@ public class SnapshotServiceImpl implements SnapshotService {
             if (oldSensorStateMap.containsKey(event.getId())) {
                 SensorStateAvro oldState = oldSensorStateMap.get(event.getId());
                 if (oldState.getTimestamp().isAfter(event.getTimestamp()) || oldState.getData().equals(event.getPayload())) {
-                   log.info("вернули пустой запрос, нечего обновлять");
+                    log.info("вернули пустой запрос, нечего обновлять");
                     return Optional.empty(); //возврващаем пустой запрос
                 }
             } //записываем статусы в снимок
@@ -65,7 +61,7 @@ public class SnapshotServiceImpl implements SnapshotService {
                     .build();
             oldSnapshot.getSensorsState().put(event.getId(), sensorStateAvro);
             oldSnapshot.setTimestamp(event.getTimestamp());
-            log.info("вернули обновленный запрос "+ oldSnapshot);
+            log.info("вернули обновленный запрос {} ", oldSnapshot);
             return Optional.of(oldSnapshot);
         }
     }

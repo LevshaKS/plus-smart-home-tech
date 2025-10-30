@@ -11,7 +11,7 @@ import ru.yandex.practicum.kafka.telemetry.event.ActionTypeAvro;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "action")
+@Table(name = "actions")
 @SecondaryTable(name = "scenario_actions", pkJoinColumns = @PrimaryKeyJoinColumn(name = "action_id"))
 public class Actions {
 
@@ -22,7 +22,7 @@ public class Actions {
     @Enumerated(EnumType.STRING)
     private ActionTypeAvro type;
 
-    private int values;
+    private Integer value;
 
     @ManyToOne
     @JoinColumn(name = "scenario_id", table = "scenario_actions")

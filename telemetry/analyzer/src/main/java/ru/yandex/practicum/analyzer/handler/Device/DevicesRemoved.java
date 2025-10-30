@@ -23,7 +23,7 @@ public class DevicesRemoved implements HubHandler {
     @Override
     public void handler(HubEventAvro hubEvent) {
         DeviceRemovedEventAvro event = (DeviceRemovedEventAvro) hubEvent.getPayload();
-        sensorsRepository.deleteByIdAndHubId(event.getId(),hubEvent.getHubId());
-        log.info("удалили сенсор в базу из звпроса"+ hubEvent);
+        log.info("удалили сенсор в базу из звпроса" + hubEvent);
+        sensorsRepository.deleteByIdAndHubId(event.getId(), hubEvent.getHubId());
     }
 }

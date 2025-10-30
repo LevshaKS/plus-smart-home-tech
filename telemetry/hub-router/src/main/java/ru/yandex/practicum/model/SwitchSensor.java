@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class SwitchSensor {
 
-private String id;
+    private String id;
 }

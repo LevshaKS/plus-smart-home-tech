@@ -26,6 +26,7 @@ public class ScenariosRemoved implements HubHandler {
     public String getMessageType() {
         return ScenarioRemovedEventAvro.class.getSimpleName();
     }
+
     @Transactional
     @Override
     public void handler(HubEventAvro hubEvent) {
@@ -34,10 +35,10 @@ public class ScenariosRemoved implements HubHandler {
         if (scenario.isPresent()) {
             actionsRepository.deleteByScenario(scenario.get());
             conditionsRepository.deleteByScenario(scenario.get());
-         scenariosRepository.delete(scenario.get());
-         log.info("сценарий удален");
+            scenariosRepository.delete(scenario.get());
+            log.info("сценарий удален");
         } else {
-        log.warn("сценарий не найден");
+            log.warn("сценарий не найден");
         }
     }
 }

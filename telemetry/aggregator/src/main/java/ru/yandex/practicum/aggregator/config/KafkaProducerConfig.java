@@ -15,13 +15,14 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class KafkaProducerConfig {
     private final Environment environment;
+
     @Bean
-    public KafkaProducer<String, SensorsSnapshotAvro> getProducer (){
+    public KafkaProducer<String, SensorsSnapshotAvro> getProducer() {
         Properties config = new Properties();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("spring.kafka.bootstrap-servers"));
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, environment.getProperty("spring.kafka.producer.key-serializer"));
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, environment.getProperty("spring.kafka.producer.value-serializer"));
         config.put(ProducerConfig.LINGER_MS_CONFIG, environment.getProperty("spring.kafka.producer.linger-ms"));
-          return  new KafkaProducer<>(config);
+        return new KafkaProducer<>(config);
     }
 }

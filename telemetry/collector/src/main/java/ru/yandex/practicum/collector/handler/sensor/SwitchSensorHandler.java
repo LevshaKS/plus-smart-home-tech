@@ -18,19 +18,19 @@ public class SwitchSensorHandler extends BaseSensorEventHandler {
 
     @Override
     public SpecificRecordBase toAvro(SensorEventProto sensorEvent) {
-        SwitchSensorProto event =sensorEvent.getSwitchSensorEvent();
+        SwitchSensorProto event = sensorEvent.getSwitchSensorEvent();
 
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(Instant.ofEpochSecond(sensorEvent.getTimestamp().getSeconds(),sensorEvent.getTimestamp().getNanos()))
+                .setTimestamp(Instant.ofEpochSecond(sensorEvent.getTimestamp().getSeconds(), sensorEvent.getTimestamp().getNanos()))
                 .setPayload(new SwitchSensorAvro(event.getState()))
                 .build()
                 ;
     }
 
     @Override
-    public   SensorEventProto.PayloadCase  getMessageType() {
+    public SensorEventProto.PayloadCase getMessageType() {
         return SensorEventProto.PayloadCase.SWITCH_SENSOR_EVENT;
     }
 }

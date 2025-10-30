@@ -51,7 +51,7 @@ public class ScenarioAddedHandler extends BaseHubEventHandler {
                                 }
 
                         )
-                        .setValue( switch (condition.getValueCase()){
+                        .setValue(switch (condition.getValueCase()) {
                             case BOOL_VALUE -> condition.getBoolValue();
                             case INT_VALUE -> condition.getIntValue();
                             case VALUE_NOT_SET -> null;

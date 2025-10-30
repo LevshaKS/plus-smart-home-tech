@@ -7,12 +7,11 @@ import ru.yandex.practicum.analyzer.model.Sensors;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface SensorsRepository extends JpaRepository<Sensors, Long> {
+public interface SensorsRepository extends JpaRepository<Sensors, String> {
 
     boolean existsByIdInAndHubId(Collection<String> id, String hubId);
 
     Optional<Sensors> findByIdAndHubId(String id, String hubId);
-
 
 
     void deleteByIdAndHubId(String id, String hubId);

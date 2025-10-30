@@ -19,7 +19,7 @@ public class MotionSensorHandler extends BaseSensorEventHandler {
 
     @Override
     public SpecificRecordBase toAvro(SensorEventProto sensorEvent) {
-        MotionSensorProto event =  sensorEvent.getMotionSensorEvent();
+        MotionSensorProto event = sensorEvent.getMotionSensorEvent();
 
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())

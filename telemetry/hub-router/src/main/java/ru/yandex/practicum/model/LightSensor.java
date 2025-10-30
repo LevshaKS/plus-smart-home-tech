@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LightSensor {
-private String id;
-private MinMaxValue linkQuality;
-private MinMaxValue luminosity;
+    private String id;
+    private MinMaxValue linkQuality;
+    private MinMaxValue luminosity;
 
 }

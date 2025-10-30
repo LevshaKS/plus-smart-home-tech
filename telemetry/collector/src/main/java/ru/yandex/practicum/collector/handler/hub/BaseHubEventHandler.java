@@ -20,7 +20,7 @@ public abstract class BaseHubEventHandler implements HubEventHandler {
 
     @Override
     public void handler(HubEventProto hubEventHandler) {
-        log.info("отпрвка в кафку " + hubEventHandler.toString());
+        log.info("отпрвка в кафку {}", hubEventHandler.toString());
         producer.send(toAvro(hubEventHandler), hubEventHandler.getHubId(), Instant.ofEpochSecond(hubEventHandler.getTimestamp().getSeconds(), hubEventHandler.getTimestamp().getNanos()), topic);
 
     }

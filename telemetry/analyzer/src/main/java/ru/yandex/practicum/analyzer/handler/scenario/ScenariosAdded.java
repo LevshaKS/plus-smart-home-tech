@@ -43,7 +43,8 @@ public class ScenariosAdded implements HubHandler {
         Optional<Scenarios> scenarios = (scenariosRepository.findByHubIdAndName(hubEvent.getHubId(), event.getName()));
         if (scenarios.isEmpty()) {
             log.info("добавляем запись в таблицу scenario");
-            scenariosRepository.save(new Scenarios(null, hubEvent.getHubId(), event.getName()));
+             scenarios = Optional.of(new Scenarios(null, hubEvent.getHubId(), event.getName()));
+            scenariosRepository.save(scenarios.get());
         }
 
         if (sensorsRepository.existsByIdInAndHubId(event.getConditions().
@@ -51,34 +52,46 @@ public class ScenariosAdded implements HubHandler {
                 .map(ScenarioConditionAvro::getSensorId)
                 .toList(), hubEvent.getHubId())) {
 
+            Optional<Scenarios> finalScenarios = scenarios;
             Set<Conditions> conditionsSet = event.getConditions().stream()
                     .map(c -> (new Conditions(null,
                             c.getType(),
                             c.getOperation(),
-                            (Integer) c.getValue(),
-                            scenarios.get(),
-                            sensorsRepository.findById(Long.valueOf(c.getSensorId())).orElseThrow())))
+                            convertValue(c.getValue()),
+                            finalScenarios.get(),
+                            sensorsRepository.findById((c.getSensorId())).orElseThrow())))
                     .collect(Collectors.toSet());
             log.info("добавляем запись в таблицу condition");
             conditionsRepository.saveAll(conditionsSet);
-                    }
+        }
 
         if (sensorsRepository.existsByIdInAndHubId(event.getActions()
                 .stream()
                 .map(DeviceActionAvro::getSensorId)
                 .toList(), hubEvent.getHubId())) {
 
+            Optional<Scenarios> finalScenarios = scenarios;
             Set<Actions> actionsSet = event.getActions().stream()
-                            .map(d -> new Actions(null,
-                                    d.getType(),
-                                    d.getValue(),
-                                    scenarios.get(),
-                                    sensorsRepository.findById(Long.valueOf(d.getSensorId())).orElseThrow()))
+                    .map(d -> new Actions(null,
+                            d.getType(),
+                            convertValue(d.getValue()),
+                            finalScenarios.get(),
+                            sensorsRepository.findById(d.getSensorId()).orElseThrow()))
                     .collect(Collectors.toSet());
             log.info("добавляем запись в таблицу action");
             actionsRepository.saveAll(actionsSet);
         }
 
+
+
+
+    }
+    private Integer convertValue(Object value) {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        } else {
+            return (Boolean) value ? 1 : 0;
+        }
     }
 }
 

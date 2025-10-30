@@ -25,8 +25,8 @@ public class DevicesAdded implements HubHandler {
     @Transactional
     public void handler(HubEventAvro hubEvent) {
         DeviceAddedEventAvro event = (DeviceAddedEventAvro) hubEvent.getPayload();
+        log.info("сохранили сенсор в базу из звпроса" + hubEvent);
         sensorsRepository.save(new Sensors(event.getId(), hubEvent.getHubId()));
-        log.info("сохранили сенсор в базу из звпроса"+ hubEvent);
     }
 
 

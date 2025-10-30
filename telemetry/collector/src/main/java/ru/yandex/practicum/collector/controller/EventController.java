@@ -35,11 +35,11 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     public void collectSensorEvent(SensorEventProto request, StreamObserver<CollectorResponse> responseObserver) {  //request - событие от датчика   //responceObserver - ответ для клиента
         try { //проверяем если ли обраотчик для полученого события
             if (sensorEventHandlers.containsKey(request.getPayloadCase())) {
-                log.info("обработчик найден " + request.getPayloadCase());
+                log.info("обработчик найден {}", request.getPayloadCase());
                 sensorEventHandlers.get(request.getPayloadCase()).handler(request);  //если обработчик есть то передаем события на обработку
             } else {
                 log.warn("нет обработчика для собыитя " + request.getPayloadCase());
-                throw new IllegalArgumentException("нет обработчика для собыитя" + request.getPayloadCase());
+                throw new IllegalArgumentException("нет обработчика для собыитя " + request.getPayloadCase());
             }
             responseObserver.onNext(CollectorResponse.getDefaultInstance()); //после обраотки события возвращаем ответ клиенту
             responseObserver.onCompleted();  //завершаем обработку запроса

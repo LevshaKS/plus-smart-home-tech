@@ -19,13 +19,13 @@ public abstract class BaseSensorEventHandler implements SensorEventHandler {
 
     @Override
     public void handler(SensorEventProto sensorEventHandler) {
-        log.info("отпрвка в кафку " + sensorEventHandler.toString());
+        log.info("отпрвка в кафку {} ", sensorEventHandler.toString());
         producer.send(toAvro(sensorEventHandler), sensorEventHandler.getHubId(),
 
                 Instant.ofEpochSecond(sensorEventHandler.getTimestamp().getSeconds(), sensorEventHandler.getTimestamp().getNanos()), topic);
 
     }
 
-    public abstract SpecificRecordBase  toAvro(SensorEventProto sensorEvent);
+    public abstract SpecificRecordBase toAvro(SensorEventProto sensorEvent);
 
 }

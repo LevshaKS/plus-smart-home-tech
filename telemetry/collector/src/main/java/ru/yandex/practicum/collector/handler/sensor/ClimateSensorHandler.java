@@ -19,7 +19,7 @@ public class ClimateSensorHandler extends BaseSensorEventHandler {
 
     @Override
     public SpecificRecordBase toAvro(SensorEventProto sensorEvent) {
-        ClimateSensorProto event =  sensorEvent.getClimateSensorEvent();
+        ClimateSensorProto event = sensorEvent.getClimateSensorEvent();
         return SensorEventAvro.newBuilder()
                 .setHubId(sensorEvent.getHubId())
                 .setId(sensorEvent.getId())

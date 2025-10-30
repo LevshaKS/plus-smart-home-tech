@@ -15,8 +15,9 @@ import java.util.Properties;
 public class KafkaConsumerConfig {
 
     private final Environment environment;
+
     @Bean
-    public KafkaConsumer<String, SensorEventAvro> getConsumer (){
+    public KafkaConsumer<String, SensorEventAvro> getConsumer() {
         Properties config = new Properties();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("spring.kafka.bootstrap-servers"));
         config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, environment.getProperty("spring.kafka.consumer.enable-auto-commit"));
@@ -24,6 +25,6 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, environment.getProperty("spring.kafka.consumer.key-deserializer"));
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, environment.getProperty("spring.kafka.consumer.value-deserializer"));
 
-        return  new KafkaConsumer<>(config);
+        return new KafkaConsumer<>(config);
     }
 }

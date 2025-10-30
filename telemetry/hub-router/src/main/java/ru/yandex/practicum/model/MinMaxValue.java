@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class MinMaxValue {
 
-    private  int minValue;
+    private int minValue;
 
     private int maxValue;
 }

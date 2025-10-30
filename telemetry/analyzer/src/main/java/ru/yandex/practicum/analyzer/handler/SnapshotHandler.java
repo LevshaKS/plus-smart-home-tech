@@ -24,19 +24,19 @@ public class SnapshotHandler {
     private final HubRouterController hubRouterClient;
 
 
-    public void handlerSnapshot (SensorsSnapshotAvro sensorsSnapshot){
-        Map<String, SensorStateAvro> sensorStateMap =sensorsSnapshot.getSensorsState();
+    public void handlerSnapshot(SensorsSnapshotAvro sensorsSnapshot) {
+        Map<String, SensorStateAvro> sensorStateMap = sensorsSnapshot.getSensorsState();
         List<Scenarios> scenarios = scenarioRepository.findByHubId(sensorsSnapshot.getHubId());
         scenarios.stream()
                 .filter(scenario -> checkScenario(scenario, sensorStateMap))
-                .forEach(scenario -> actionRepository.findAllByScenario(scenario).forEach(hubRouterClient::sendActions) );
+                .forEach(scenario -> actionRepository.findAllByScenario(scenario).forEach(hubRouterClient::sendActions));
 
     }
+
     private boolean checkScenario(Scenarios scenario, Map<String, SensorStateAvro> sensorStateMap) {
         List<Conditions> conditions = conditionRepository.findAllByScenario(scenario);
         return conditions.stream().noneMatch(condition -> !checkCondition(condition, sensorStateMap));
     }
-
 
 
     private boolean checkCondition(Conditions condition, Map<String, SensorStateAvro> sensorStateMap) {
@@ -78,23 +78,23 @@ public class SnapshotHandler {
     }
 
 
-        private Boolean checkOperation(Conditions condition, Integer currentValue){
-            ConditionOperationAvro conditionOperation = condition.getOperation();
-            Integer targetValue = condition.getValue();
+    private Boolean checkOperation(Conditions condition, Integer currentValue) {
+        ConditionOperationAvro conditionOperation = condition.getOperation();
+        Integer targetValue = condition.getValue();
 
-            switch (conditionOperation) {
-                case EQUALS -> {
-                    return targetValue == currentValue;
-                }
-                case LOWER_THAN -> {
-                    return currentValue < targetValue;
-                }
-                case GREATER_THAN -> {
-                    return currentValue > targetValue;
-                }
-                case null -> {
-                    return null;
-                }
+        switch (conditionOperation) {
+            case EQUALS -> {
+                return targetValue == currentValue;
+            }
+            case LOWER_THAN -> {
+                return currentValue < targetValue;
+            }
+            case GREATER_THAN -> {
+                return currentValue > targetValue;
+            }
+            case null -> {
+                return null;
             }
         }
     }
+}

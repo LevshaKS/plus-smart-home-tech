@@ -2,7 +2,6 @@ package ru.yandex.practicum.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.N;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +17,11 @@ public class Sensors {
 
     List<ClimateSensor> climateSensors;
 
-    List <MotionSensor> motionSensors;
+    List<MotionSensor> motionSensors;
 
-    List <SwitchSensor> switchSensors;
+    List<SwitchSensor> switchSensors;
 
-    List <TemperatureSensor> temperatureSensors;
+    List<TemperatureSensor> temperatureSensors;
 
 }
 

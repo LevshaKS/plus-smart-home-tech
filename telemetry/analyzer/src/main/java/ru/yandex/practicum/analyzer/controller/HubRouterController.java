@@ -12,7 +12,6 @@ import ru.yandex.practicum.grpc.telemetry.event.DeviceActionRequest;
 import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc;
 
 
-
 import java.time.Instant;
 
 @Service
@@ -26,20 +25,19 @@ public class HubRouterController {
     }
 
     public void sendActions(Actions actions) {
-        Instant instant= Instant.now();
+        Instant instant = Instant.now();
         DeviceActionRequest deviceActionRequest = DeviceActionRequest.newBuilder()
                 .setHubId(actions.getScenario().getHubId())
                 .setScenario(actions.getScenario().getName())
                 .setAction(DeviceActionProto.newBuilder()
                         .setSensorId(actions.getSensor().getId())
                         .setType(ActionTypeProto.valueOf(String.valueOf(actions.getType())))
-                        .setValue(actions.getValues())
-                .build())
+                        .setValue(actions.getValue())
+                        .build())
                 .setTimestamp(Timestamp.newBuilder().setSeconds(instant.getEpochSecond()).setNanos(instant.getNano()))
                 .build();
-
-      hubRouterClient.handleDeviceAction(deviceActionRequest);
         log.info("отправлено в хаб роутер действие {}", deviceActionRequest);
+        hubRouterClient.handleDeviceAction(deviceActionRequest);
     }
 
 }

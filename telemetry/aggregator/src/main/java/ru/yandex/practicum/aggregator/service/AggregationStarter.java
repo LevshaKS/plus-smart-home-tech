@@ -38,11 +38,12 @@ public class AggregationStarter {
     @Value("${topic.telemetry-snapshots}")
     private String topicTelemetrySnapshots;
 
+    @Value("${spring.kafka.consumer.pull-timeout}")
+    private Duration pollTimeout;
+
     public void start() {
         try {
             consumer.subscribe(List.of(topicTelemetrySensors));
-            //     ... подготовка к обработке данных ...
-            //     ... например, подписка на топик ...
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 log.info("сработал хук на завершение JVM. перерывается консьюмер");
                 consumer.wakeup();
@@ -50,12 +51,12 @@ public class AggregationStarter {
 
             }));
             while (true) {
-                ConsumerRecords<String, SensorEventAvro> records = consumer.poll(Duration.ofMillis(1000));
+                ConsumerRecords<String, SensorEventAvro> records = consumer.poll(pollTimeout);
 
                 for (ConsumerRecord<String, SensorEventAvro> record : records) {
 
                     SensorEventAvro sensorEventAvro = record.value();
-                    log.info("обработка входящих данных " + sensorEventAvro);
+                    log.info("обработка входящих данных {} ", sensorEventAvro);
                     Optional<SensorsSnapshotAvro> snapshotAvro = snapshotService.updateState(sensorEventAvro);
                     log.info("Получение снимка " + snapshotAvro);
                     if (snapshotAvro.isPresent()) {
@@ -68,8 +69,6 @@ public class AggregationStarter {
 
                 }
                 consumer.commitSync();
-                // ... реализация цикла опроса ...
-                // ... и обработка полученных данных ...
             }
 
         } catch (WakeupException ignored) {
@@ -85,8 +84,6 @@ public class AggregationStarter {
                 // что все сообщения, лежащие в буффере, отправлены и
                 // все оффсеты обработанных сообщений зафиксированы
 
-                // здесь нужно вызвать метод продюсера для сброса данных в буффере
-                // здесь нужно вызвать метод консьюмера для фиксиции смещений
 
             } finally {
                 log.info("Закрываем консьюмер");

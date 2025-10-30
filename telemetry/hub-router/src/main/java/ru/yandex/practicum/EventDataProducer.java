@@ -23,9 +23,9 @@ public class EventDataProducer {
 
     private Sensors sensors;
 
-    public void  start (){
+    public void start() {
         log.info("запуск сообщений с рандомными данными");
-        for (int i =0; i<1000; i++){
+        for (int i = 0; i < 1000; i++) {
             sensors.getClimateSensors().forEach(climateSensor -> sendEvent(createClimateSensorEvent(climateSensor)));
 
             sensors.getMotionSensors().forEach(motionSensor -> sendEvent(createMotionSensorEvent(motionSensor)));
@@ -39,7 +39,6 @@ public class EventDataProducer {
         }
         log.info("остановка сообщений с рандомными данными");
     }
-
 
 
     private SensorEventProto createTemperatureSensorEvent(TemperatureSensor sensor) {
@@ -61,20 +60,20 @@ public class EventDataProducer {
                 .build();
     }
 
-private SensorEventProto createSwitchSensorEvent (SwitchSensor sensor){
-    Instant ts = Instant.now();
+    private SensorEventProto createSwitchSensorEvent(SwitchSensor sensor) {
+        Instant ts = Instant.now();
 
-    return SensorEventProto.newBuilder()
-            .setId(sensor.getId())
-            .setTimestamp(Timestamp.newBuilder().setSeconds(ts.getEpochSecond()).setNanos(ts.getNano()))
-            .setSwitchSensorEvent(
-                    SwitchSensorProto.newBuilder()
-                            .setState(getRandomSwitchValue())
-                            .build()
-            )
-            .build();
+        return SensorEventProto.newBuilder()
+                .setId(sensor.getId())
+                .setTimestamp(Timestamp.newBuilder().setSeconds(ts.getEpochSecond()).setNanos(ts.getNano()))
+                .setSwitchSensorEvent(
+                        SwitchSensorProto.newBuilder()
+                                .setState(getRandomSwitchValue())
+                                .build()
+                )
+                .build();
 
-}
+    }
 
 
     private SensorEventProto createMotionSensorEvent(MotionSensor sensor) {
@@ -146,11 +145,11 @@ private SensorEventProto createSwitchSensorEvent (SwitchSensor sensor){
         log.info("Получил ответ от коллектора: {}", response);
     }
 
-    private int getRandomSensorValue (MinMaxValue prevValue){
-        return  (int)(((prevValue.getMaxValue()- prevValue.getMinValue())+1)*Math.random()+ prevValue.getMinValue());
-}
+    private int getRandomSensorValue(MinMaxValue prevValue) {
+        return (int) (((prevValue.getMaxValue() - prevValue.getMinValue()) + 1) * Math.random() + prevValue.getMinValue());
+    }
 
-    private  boolean getRandomSwitchValue (){
+    private boolean getRandomSwitchValue() {
         Random random = new Random();
         return random.nextBoolean();
     }
