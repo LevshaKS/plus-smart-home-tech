@@ -1,8 +1,5 @@
 package ru.yandex.practicum.analyzer.service;
 
-
-
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -10,18 +7,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import ru.yandex.practicum.analyzer.configuration.KafkaPropertiesConfig;
 import ru.yandex.practicum.analyzer.handler.HubHandler;
 import ru.yandex.practicum.analyzer.handler.HubHandlers;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
-import java.time.Duration;
-
-import java.util.List;
 import java.util.Map;
-
 
 
 @Component
@@ -30,39 +22,10 @@ import java.util.Map;
 
 public class HubEventProcessor implements Runnable {
 
-    // private final KafkaConsumer<String, HubEventAvro> consumer;
+    private final KafkaPropertiesConfig config;
 
     private final Consumer<String, HubEventAvro> consumer;
     private final HubHandlers hubHandlers;
-
-
-    @Value("${spring.kafka.analyzer.consumer.hub.pull-timeout}")
-    private Duration pollTimeout;
-    //private final List<String> topics;
-
-    @Value("${topic.hub-event-topic}")
-    private String topics;
-
-//    public HubEventProcessor ( Set<HubHandler> hubHandlers, Consumer<String, HubEventAvro> consumer){
-//        this.hubHandlers = hubHandlers.stream().collect(Collectors.toMap(HubHandler::getMessageType, Function.identity()));
-//        this.consumer=consumer;
-//    }
-
-//    public HubEventProcessor(KafkaConfig config, KafkaConsumer<String, HubEventAvro> consumer, Set<HubHandler> hubHandlers, Duration pollTimeout, List<String> topics) {
-//        this.hubHandlers = hubHandlers.stream().collect(Collectors.toMap(HubHandler::getMessageType, Function.identity()));
-//
-//        final KafkaConfig.ConsumerConfig consumerConfig =
-//                config.getConsumers().get(this.getClass().getSimpleName());
-//
-//        this.consumer = new KafkaConsumer<>(consumerConfig.getProperties());
-//        this.pollTimeout = consumerConfig.getPollTimeout();
-//        this.topics = consumerConfig.getTopics();
-//
-//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//            log.info("сработал хук на завершение JVM. перерывается консьюмер");
-//            consumer.wakeup();
-//        }));
-//    }
 
 
     @Override
@@ -70,15 +33,15 @@ public class HubEventProcessor implements Runnable {
         Map<String, HubHandler> hubHandlerMap = hubHandlers.getHandlers();
 
         try {
-            log.info("Подписваемся на топик {}", topics);
-            consumer.subscribe(List.of(topics));
+            log.info("Подписваемся на топик {}", config.getConsumers().getHub().getTopics());
+            consumer.subscribe(config.getConsumers().getHub().getTopics());
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 log.info("сработал хук на завершение JVM. перерывается консьюмер");
                 consumer.wakeup();
             }));
 
             while (true) {
-                ConsumerRecords<String, HubEventAvro> records = consumer.poll(pollTimeout);
+                ConsumerRecords<String, HubEventAvro> records = consumer.poll(config.getHubPollTimeout());
                 for (ConsumerRecord<String, HubEventAvro> record : records) {
                     HubEventAvro hubEvent = record.value();
                     String payload = hubEvent.getPayload().getClass().getSimpleName();
@@ -94,7 +57,7 @@ public class HubEventProcessor implements Runnable {
             }
         } catch (WakeupException ignored) {
         } catch (Exception e) {
-            log.error("Ошибка получения данных {}", topics);
+            log.error("Ошибка получения данных {}", config.getConsumers().getHub().getTopics());
         } finally {
             try {
                 consumer.commitSync();

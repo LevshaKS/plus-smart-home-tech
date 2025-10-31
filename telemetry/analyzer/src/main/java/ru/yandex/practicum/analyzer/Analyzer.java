@@ -5,9 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-
 @SpringBootApplication
-//@ConfigurationPropertiesScan
+
 
 public class Analyzer {
     public static void main(String[] args) {
