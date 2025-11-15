@@ -9,7 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.beans.factory.annotation.Value;
+
 
 import org.springframework.stereotype.Component;
 
@@ -18,8 +18,7 @@ import ru.yandex.practicum.aggregator.config.KafkaPropertiesConfig;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
-import java.time.Duration;
-import java.util.List;
+
 import java.util.Optional;
 
 @Slf4j
