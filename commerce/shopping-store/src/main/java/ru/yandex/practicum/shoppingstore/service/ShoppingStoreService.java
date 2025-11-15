@@ -1,6 +1,5 @@
 package ru.yandex.practicum.shoppingstore.service;
 
-import org.springframework.data.domain.Pageable;
 import ru.yandex.practicum.interactionapi.enums.ProductCategory;
 import ru.yandex.practicum.interactionapi.model.PageableDto;
 import ru.yandex.practicum.interactionapi.model.ProductDto;
