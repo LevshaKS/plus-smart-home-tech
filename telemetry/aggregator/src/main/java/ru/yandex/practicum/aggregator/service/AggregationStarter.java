@@ -9,16 +9,16 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.beans.factory.annotation.Value;
+
 
 import org.springframework.stereotype.Component;
 
 
+import ru.yandex.practicum.aggregator.config.KafkaPropertiesConfig;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
-import java.time.Duration;
-import java.util.List;
+
 import java.util.Optional;
 
 @Slf4j
@@ -31,19 +31,12 @@ public class AggregationStarter {
     private final Producer<String, SensorsSnapshotAvro> producer;
     private final Consumer<String, SensorEventAvro> consumer;
     private final SnapshotService snapshotService;
+    private final KafkaPropertiesConfig config;
 
-    @Value("${topic.telemetry-sensors}")
-    private String topicTelemetrySensors;
-
-    @Value("${topic.telemetry-snapshots}")
-    private String topicTelemetrySnapshots;
-
-    @Value("${spring.kafka.consumer.pull-timeout}")
-    private Duration pollTimeout;
 
     public void start() {
         try {
-            consumer.subscribe(List.of(topicTelemetrySensors));
+            consumer.subscribe(config.getConsumers().getTopics());
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 log.info("сработал хук на завершение JVM. перерывается консьюмер");
                 consumer.wakeup();
@@ -51,7 +44,7 @@ public class AggregationStarter {
 
             }));
             while (true) {
-                ConsumerRecords<String, SensorEventAvro> records = consumer.poll(pollTimeout);
+                ConsumerRecords<String, SensorEventAvro> records = consumer.poll(config.getConsumerPollTimeout());
 
                 for (ConsumerRecord<String, SensorEventAvro> record : records) {
 
@@ -61,7 +54,7 @@ public class AggregationStarter {
                     log.info("Получение снимка " + snapshotAvro);
                     if (snapshotAvro.isPresent()) {
                         log.info("отпраляем список в топик кафки");
-                        ProducerRecord<String, SensorsSnapshotAvro> message = new ProducerRecord<>(topicTelemetrySnapshots, null,
+                        ProducerRecord<String, SensorsSnapshotAvro> message = new ProducerRecord<>(config.getProducers().getTopics(), null,
                                 sensorEventAvro.getTimestamp().toEpochMilli(), sensorEventAvro.getHubId(), snapshotAvro.get());
 
                         producer.send(message);

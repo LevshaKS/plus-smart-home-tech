@@ -1,40 +1,20 @@
-grpc:
-  client:
-    hub-routers:
-      address: 'static://localhost:59090'
-      enableKeepAlive: true
-      keepAliveWithoutCalls: true
-      negotiationType: plaintext
-
-
 spring:
-
-  kafka:
-    bootstrap-servers: "localhost:9092"
-    hub-poll-timeout: 2000ms
-    snapshot-poll-timeout: 500ms
-
-    consumers:
-      application:
-        name: analyzer
-      snapshot:
-        properties:
-          "bootstrap.servers": ${spring.kafka.bootstrap-servers}
-          "value.deserializer": "ru.practicum.kafka.deserializer.SensorSnapshotEventDeserializer"
-          "group.id": "telemetry.analyzer.snapshot"
-          "client.id": "SnapshotsConsumer"
-          "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
-          "enable.auto.commit": false
-        topics: "telemetry.snapshots.v1"
-
-      hub:
-        properties:
-          "bootstrap.servers":  ${spring.kafka.bootstrap-servers}
-          "value.deserializer": "ru.practicum.kafka.deserializer.HubEventDeserializer"
-          "group.id": "telemetry.analyzer.hub"
-          "client.id": "HubEventConsumer"
-          "enable.auto.commit": false
-          "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
-        topics: "telemetry.hubs.v1"
+  application:
+    name: analyzer
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      fail-fast: true
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
+    discovery:
+      enabled: true
+      serviceId: config-server
 
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
