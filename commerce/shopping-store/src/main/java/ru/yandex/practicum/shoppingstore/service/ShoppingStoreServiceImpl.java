@@ -12,6 +12,7 @@ import ru.yandex.practicum.interactionapi.enums.ProductState;
 import ru.yandex.practicum.interactionapi.model.PageableDto;
 import ru.yandex.practicum.interactionapi.model.ProductDto;
 import ru.yandex.practicum.interactionapi.model.ProductQuantityStateRequest;
+import ru.yandex.practicum.interactionapi.model.ProductsPageDto;
 import ru.yandex.practicum.shoppingstore.dal.ProductMapper;
 import ru.yandex.practicum.shoppingstore.exception.NotFoundException;
 import ru.yandex.practicum.shoppingstore.model.Product;
@@ -33,22 +34,32 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     private final ProductMapper productMapper;
 
     @Override
-    public List<ProductDto> getProducts(ProductCategory productCategory, PageableDto pageableDto) {
+    public ProductsPageDto getProducts(ProductCategory productCategory, PageableDto pageableDto) {
         List<Product> products;
-
+        Pageable pageable = null;
         if (pageableDto.getSort() != null) {
 
-            Pageable pageable = PageRequest.of(pageableDto.getPage(), pageableDto.getSize(), Sort.by(Sort.DEFAULT_DIRECTION, (String.join(",", pageableDto.getSort()))));
+            pageable = PageRequest.of(pageableDto.getPage(), pageableDto.getSize(), Sort.by(Sort.DEFAULT_DIRECTION, (String.join(",", pageableDto.getSort()))));
             products = shoppingStoreRepository.findAllByProductCategory(productCategory, pageable);
+            if (products.isEmpty()) {
+                log.info("возврщен пустой список поиска по категории " + productCategory);
+                return new ProductsPageDto();
+            } else {
+                log.info("возврщен список поиска по категории " + productCategory);
+
+                return new ProductsPageDto(productMapper.productsToProductsDto(products), pageable.getSort().toList());
+            }
+
         } else {
             products = shoppingStoreRepository.findAllByProductCategory(productCategory);
-        }
-        if (products.isEmpty()) {
-            log.info("возврщен пустой список поиска по категории " + productCategory);
-            return Collections.emptyList();
-        } else {
-            log.info("возврщен список поиска по категории " + productCategory);
-            return productMapper.productsToProductsDto(products);
+
+            if (products.isEmpty()) {
+                log.info("возврщен пустой список поиска по категории " + productCategory);
+                return new ProductsPageDto();
+            } else {
+                log.info("возврщен список поиска по категории " + productCategory);
+                return new ProductsPageDto(productMapper.productsToProductsDto(products), null);
+            }
         }
     }
 

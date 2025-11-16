@@ -11,6 +11,7 @@ import ru.yandex.practicum.interactionapi.enums.ProductCategory;
 import ru.yandex.practicum.interactionapi.model.PageableDto;
 import ru.yandex.practicum.interactionapi.model.ProductDto;
 import ru.yandex.practicum.interactionapi.model.ProductQuantityStateRequest;
+import ru.yandex.practicum.interactionapi.model.ProductsPageDto;
 import ru.yandex.practicum.shoppingstore.service.ShoppingStoreService;
 
 
@@ -50,7 +51,7 @@ public class shoppingStoreController {
     }
 
     @GetMapping
-    public List<ProductDto> getProducts(@RequestParam ProductCategory category, @Valid PageableDto pageableDto) {
+    public ProductsPageDto getProducts(@RequestParam ProductCategory category, @Valid PageableDto pageableDto) {
         log.info("поиск категории продукта {}", category);
         return shoppingStoreService.getProducts(category, pageableDto);
     }
