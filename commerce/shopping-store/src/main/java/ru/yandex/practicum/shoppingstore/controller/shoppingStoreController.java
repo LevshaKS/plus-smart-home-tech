@@ -53,6 +53,7 @@ public class shoppingStoreController {
     @GetMapping
     public ProductsPageDto getProducts(@RequestParam ProductCategory category, @Valid PageableDto pageableDto) {
         log.info("поиск категории продукта {}", category);
+        log.info("поиск категории продукта  пареметры {}", pageableDto);
         return shoppingStoreService.getProducts(category, pageableDto);
     }
 
