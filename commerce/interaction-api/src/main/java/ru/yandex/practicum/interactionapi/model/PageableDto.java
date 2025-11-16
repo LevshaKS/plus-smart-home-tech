@@ -12,10 +12,14 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @ToString
+
 public class PageableDto {
     @Min(0)
     Integer page;
     @Min(1)
     Integer size;
     List<String> sort;
+
+
+
 }

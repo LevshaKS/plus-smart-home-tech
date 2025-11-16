@@ -38,8 +38,19 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         List<Product> products;
         Pageable pageable = null;
         if (pageableDto.getSort() != null) {
+            String sortType = "ASC";
+            List<String> sorts = pageableDto.getSort();
+            if (sorts.remove("DESC")) {
+                sortType = "DESC";
+            }
+            if (sorts.remove("ASC")) {
+                sortType = "ASC";
+            }
 
-            pageable = PageRequest.of(pageableDto.getPage(), pageableDto.getSize(), Sort.by(Sort.DEFAULT_DIRECTION, (String.join(",", pageableDto.getSort()))));
+
+            pageable = PageRequest.of(pageableDto.getPage(), pageableDto.getSize(), Sort.by(Sort.Direction.valueOf(sortType), (String.join(",", sorts))));
+
+
             products = shoppingStoreRepository.findAllByProductCategory(productCategory, pageable);
             if (products.isEmpty()) {
                 log.info("возврщен пустой список поиска по категории " + productCategory);
