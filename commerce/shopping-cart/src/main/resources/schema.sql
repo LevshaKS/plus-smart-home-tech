@@ -10,5 +10,5 @@ create table if not exists shopping_cart_user (
 create table if not exists shopping_cart_product (
     product_id uuid not null,
     quantity integer,
-    shopping_cart_id uuid references shopping_cart_user (shopping_cart_id)  on delete cascade
+    cart_id uuid references shopping_cart_user (shopping_cart_id)  on delete cascade
 );
