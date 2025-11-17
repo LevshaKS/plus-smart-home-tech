@@ -17,22 +17,22 @@ import java.util.UUID;
 @ToString
 public class ProductDto {
 
-    UUID productId;
+    private UUID productId;
     @NotBlank
-    String productName;
+    private String productName;
     @NotBlank
-    String description;
+    private String description;
 
-    String imageSrc;
+    private String imageSrc;
 
-
-    @NotNull
-    QuantityState quantityState;
-    @NotNull
-    ProductState productState;
-
-    ProductCategory productCategory;
 
     @NotNull
-    double price;
+    private QuantityState quantityState;
+    @NotNull
+    private ProductState productState;
+
+    private ProductCategory productCategory;
+
+    @NotNull
+    private double price;
 }

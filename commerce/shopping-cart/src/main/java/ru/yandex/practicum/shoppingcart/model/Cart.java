@@ -17,15 +17,15 @@ import java.util.UUID;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID shoppingCartId;
-    String username;
-    boolean active;
+    private UUID shoppingCartId;
+    private String username;
+    private boolean active;
 
     @ElementCollection
     @CollectionTable(name = "shopping_cart_product", joinColumns = @JoinColumn(name = "cart_id"))
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
-    Map<UUID, Long> products;
+    private Map<UUID, Long> products;
 
 
 }

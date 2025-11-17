@@ -10,9 +10,9 @@ import lombok.*;
 @ToString
 public class BookedProductDto {
     @NotNull
-    Double deliveryWeight;
+    private Double deliveryWeight;
     @NotNull
-    Double deliveryVolume;
+    private Double deliveryVolume;
     @NotNull
-    Boolean fragile;
+    private Boolean fragile;
 }

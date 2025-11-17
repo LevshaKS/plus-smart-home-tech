@@ -12,7 +12,7 @@ import java.util.UUID;
 @ToString
 public class AddProductToWarehouseRequest {
     @NotNull
-    UUID productId;
+    private UUID productId;
     @NotNull
-    Long quantity;
+    private Long quantity;
 }

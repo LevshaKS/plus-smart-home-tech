@@ -14,8 +14,8 @@ import java.util.UUID;
 @ToString
 public class ProductQuantityStateRequest {
     @NotNull
-    UUID productId;
+    private UUID productId;
 
     @NotNull
-    QuantityState quantityState;
+    private QuantityState quantityState;
 }

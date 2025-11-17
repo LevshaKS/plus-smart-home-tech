@@ -15,11 +15,10 @@ import java.util.List;
 
 public class PageableDto {
     @Min(0)
-    Integer page;
+    private Integer page;
     @Min(1)
-    Integer size;
-    List<String> sort;
-
+    private Integer size;
+    private List<String> sort;
 
 
 }

@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.interactionapi.enums.ProductCategory;
@@ -17,7 +18,7 @@ import ru.yandex.practicum.shoppingstore.service.ShoppingStoreService;
 
 import java.util.List;
 import java.util.UUID;
-
+@Validated
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/shopping-store")

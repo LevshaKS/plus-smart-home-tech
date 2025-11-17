@@ -18,10 +18,10 @@ import java.util.UUID;
 @Table(name = "warehouse_product")
 public class Warehouse {
     @Id
-    UUID productId;
-    long quantity;
-    Boolean fragile;
+    private UUID productId;
+    private long quantity;
+    private Boolean fragile;
     @Embedded
-    Dimension dimension;
-    double weight;
+    private Dimension dimension;
+    private double weight;
 }
