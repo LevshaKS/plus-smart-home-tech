@@ -1,13 +1,11 @@
 package ru.yandex.practicum.interactionapi.model;
 
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 @AllArgsConstructor
