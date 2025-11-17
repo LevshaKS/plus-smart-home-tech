@@ -12,7 +12,6 @@ import java.util.UUID;
 
 
 @Getter
-@Transactional
 @Setter
 @Entity
 @Table(name = "products")
@@ -22,20 +21,20 @@ public class Product {
     //id продукта в формате uuid
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID productId;
+    private UUID productId;
 
-    String productName;
-    String description;
-    String imageSrc;
-    double price;
-
-    @Enumerated(EnumType.STRING)
-    QuantityState quantityState;
+    private String productName;
+    private String description;
+    private String imageSrc;
+    private double price;
 
     @Enumerated(EnumType.STRING)
-    ProductState productState;
+    private QuantityState quantityState;
 
     @Enumerated(EnumType.STRING)
-    ProductCategory productCategory;
+    private ProductState productState;
+
+    @Enumerated(EnumType.STRING)
+    private ProductCategory productCategory;
 
 }

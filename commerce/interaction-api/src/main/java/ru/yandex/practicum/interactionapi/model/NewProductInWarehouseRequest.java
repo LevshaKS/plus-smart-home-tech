@@ -14,11 +14,11 @@ import java.util.UUID;
 @ToString
 public class NewProductInWarehouseRequest {
     @NotNull
-    UUID productId;
-    Boolean fragile;
+    private UUID productId;
+    private Boolean fragile;
     @NotNull
-    Dimension dimension;
+    private Dimension dimension;
     @Min(1)
-    Double weight;
+    private Double weight;
 }
 

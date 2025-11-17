@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductsPageDto {
-    List<ProductDto> content;
+    private List<ProductDto> content;
 
-    List<Sort.Order> sort;
+    private List<Sort.Order> sort;
 }
