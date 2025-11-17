@@ -1,0 +1,40 @@
+package ru.yandex.practicum.shoppingstore.model;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.interactionapi.enums.ProductCategory;
+import ru.yandex.practicum.interactionapi.enums.ProductState;
+import ru.yandex.practicum.interactionapi.enums.QuantityState;
+
+import java.util.UUID;
+
+
+@Getter
+@Setter
+@Entity
+@Table(name = "products")
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product {
+    //id продукта в формате uuid
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID productId;
+
+    private String productName;
+    private String description;
+    private String imageSrc;
+    private double price;
+
+    @Enumerated(EnumType.STRING)
+    private QuantityState quantityState;
+
+    @Enumerated(EnumType.STRING)
+    private ProductState productState;
+
+    @Enumerated(EnumType.STRING)
+    private ProductCategory productCategory;
+
+}

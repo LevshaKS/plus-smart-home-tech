@@ -1,13 +1,50 @@
 services:
-  db:
+  db-analyzer:
     image: postgres:16.1
     container_name: analyzer-db
     ports:
-      - "5432:5432"
+      - "6432:5432"
     environment:
       - POSTGRES_DB=scenario-db
       - POSTGRES_PASSWORD=analyzer
       - POSTGRES_USER=analyzer
+
+  db-postgres:
+    image: postgres:16.1
+    container_name: db-postgres
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=commerce_shopping_store
+      - POSTGRES_PASSWORD=shopping
+      - POSTGRES_USER=postgres
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+
+
+  postgres-init:
+    image: postgres:16.1
+    container_name: postgres-init
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        psql postgresql://postgres:shopping@postgres:5432 -v ON_ERROR_STOP=1 <<-EOSQL
+        
+        create database commerce_shopping_cart;
+        create database commerce_shopping_warehouse;
+        EOSQL
+
+
   kafka:
     image: confluentinc/confluent-local:latest
     hostname: kafka

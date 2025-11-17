@@ -21,8 +21,6 @@ public class KafkaPropertiesConfig {
     private Duration hubPollTimeout;
     private Duration snapshotPollTimeout;
 
-    public KafkaPropertiesConfig() {
-    }
 
     @Getter
     @Setter

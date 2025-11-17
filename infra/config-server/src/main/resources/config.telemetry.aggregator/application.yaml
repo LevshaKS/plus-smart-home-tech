@@ -1,0 +1,21 @@
+spring:
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer-poll-timeout: 500ms
+
+    consumers:
+      properties:
+        "bootstrap.servers": ${spring.kafka.bootstrap-servers}
+        "value.deserializer": "ru.practicum.kafka.deserializer.SensorEventDeserializer"
+        "group.id": "telemetry.aggregator.sensors"
+        "key.deserializer": "org.apache.kafka.common.serialization.StringDeserializer"
+        "enable.auto.commit": false
+      topics: "telemetry.sensors.v1"
+
+    producers:
+      properties:
+        "bootstrap.servers": ${spring.kafka.bootstrap-servers}
+        "value.serializer": "ru.practicum.kafka.serializer.GeneralAvroSerializer"
+        "linger.ms": 0
+        "key.serializer": "org.apache.kafka.common.serialization.StringSerializer"
+      topics: "telemetry.snapshots.v1"
