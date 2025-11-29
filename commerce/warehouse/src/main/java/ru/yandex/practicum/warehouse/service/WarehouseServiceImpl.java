@@ -8,12 +8,15 @@ import ru.yandex.practicum.interactionapi.enums.QuantityState;
 import ru.yandex.practicum.interactionapi.feignClient.ShoppingStoreFeignClient;
 import ru.yandex.practicum.interactionapi.model.*;
 import ru.yandex.practicum.warehouse.address.Address;
+import ru.yandex.practicum.warehouse.dal.BookingMapper;
 import ru.yandex.practicum.warehouse.dal.WarehouseMapper;
 import ru.yandex.practicum.warehouse.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.warehouse.exception.NotFoundProductInWareHouseException;
 import ru.yandex.practicum.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouseException;
 import ru.yandex.practicum.warehouse.exception.SpecifiedProductAlreadyInWarehouseException;
+import ru.yandex.practicum.warehouse.model.Booking;
 import ru.yandex.practicum.warehouse.model.Warehouse;
+import ru.yandex.practicum.warehouse.repository.BookingRepository;
 import ru.yandex.practicum.warehouse.repository.WarehouseRepository;
 
 import java.util.*;
@@ -28,6 +31,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
     private final ShoppingStoreFeignClient shoppingStoreFeignClient;
+    private final BookingMapper bookingMapper;
+    private final BookingRepository bookingRepository;
 
     @Override
     @Transactional
@@ -106,5 +111,44 @@ public class WarehouseServiceImpl implements WarehouseService {
         return new AddressDto(address, address, address, address, address);
     }
 
+    @Override
+    @Transactional
+    public void shippedToDelivery(ShippedToDeliveryRequest deliveryRequest) {
+        Booking booking = bookingRepository.findByOrderId(deliveryRequest.getOrderId())
+                .orElseThrow(() -> new NoSpecifiedProductInWarehouseException("не найден на складе"));
+        log.info("передан товар в доставку");
+        booking.setDeliveryId(deliveryRequest.getDeliveryId());
+    }
+
+    @Override
+    @Transactional
+    public void acceptReturn(Map<UUID, Long> products) {
+        List<Warehouse> warehouses = warehouseRepository.findAllById(products.keySet());
+        for (Warehouse warehouse : warehouses) {
+            warehouse.setQuantity(warehouse.getQuantity() + products.get(warehouse.getProductId()));
+        }
+        log.info("возвращен товар на склад {}", products);
+    }
+
+    @Override
+    @Transactional
+    public BookedProductDto assemblyProductForOrder(AssemblyProductsForOrderRequest assemblyProductsForOrder) {
+        Booking booking = bookingRepository.findById(assemblyProductsForOrder.getShoppingCartId()).orElseThrow(() ->
+                new NotFoundProductInWareHouseException("не найден в базе " + assemblyProductsForOrder.getShoppingCartId()));
+
+        Map<UUID, Long> products = booking.getProducts();
+        List<Warehouse> productInWarehouse = warehouseRepository.findAllById(products.keySet());
+        for (Warehouse warehouse : productInWarehouse) {
+            if (warehouse.getQuantity() < products.get(warehouse.getProductId())) {
+                throw new ProductInShoppingCartLowQuantityInWarehouseException("не хватает количества товара на складе");
+            }
+            warehouse.setQuantity(warehouse.getQuantity() - products.get(warehouse.getProductId()));
+        }
+        booking.setOrderId(assemblyProductsForOrder.getOrderId());
+        log.info("сборка товара для отправки {}", assemblyProductsForOrder);
+        return bookingMapper.productToBookingProductDto(booking);
+    }
+
 
 }
+

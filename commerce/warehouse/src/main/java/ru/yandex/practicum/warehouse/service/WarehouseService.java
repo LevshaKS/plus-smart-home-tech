@@ -18,4 +18,10 @@ public interface WarehouseService {
                                        Map<UUID, Long> cartProducts);
 
     AddressDto getAddress();
+
+    void shippedToDelivery(ShippedToDeliveryRequest deliveryRequest);
+
+    void acceptReturn(Map<UUID, Long> products);
+
+    BookedProductDto assemblyProductForOrder(AssemblyProductsForOrderRequest assemblyProductsForOrder);
 }

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interactionapi.model.*;
 import ru.yandex.practicum.warehouse.service.WarehouseService;
 
+import java.util.Map;
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/warehouse")
@@ -39,5 +42,24 @@ public class WarehouseController {
         log.info("Проверка достаточности продуктов {}", shoppingCartDto);
         return warehouseService.checkProductShoppingCart(shoppingCartDto);
     }
+
+    @PostMapping("/shipped")
+    public void shippedToDelivery(ShippedToDeliveryRequest deliveryRequest) {
+        log.info("передать в доставку {}", deliveryRequest);
+        warehouseService.shippedToDelivery(deliveryRequest);
+    }
+
+    @PostMapping("/return")
+    public void acceptReturn(@RequestBody Map<UUID, Long> products) {
+        log.info("возврат товара на склад {}", products);
+        warehouseService.acceptReturn(products);
+    }
+
+    @PostMapping("/assembly")
+    public BookedProductDto assemblyProductForOrder(@RequestBody @Valid AssemblyProductsForOrderRequest assemblyProductsForOrder) {
+        log.info("сбор заказа для доставки", assemblyProductsForOrder);
+        return warehouseService.assemblyProductForOrder(assemblyProductsForOrder);
+    }
+
 
 }
