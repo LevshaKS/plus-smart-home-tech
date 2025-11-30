@@ -2,6 +2,7 @@ package ru.yandex.practicum.interactionapi.model;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -11,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PaymentDto {
     private UUID paymentId;
-    private Double totalPayment;
-    private Double deliveryTotal;
-    private Double feeTotal;
+    private BigDecimal totalPayment;
+    private BigDecimal deliveryTotal;
+    private BigDecimal feeTotal;
 }

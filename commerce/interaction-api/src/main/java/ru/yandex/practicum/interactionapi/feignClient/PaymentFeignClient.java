@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.interactionapi.model.OrderDto;
 import ru.yandex.practicum.interactionapi.model.PaymentDto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @FeignClient(name = "payment", path = "/api/v1/payment")
@@ -17,13 +18,13 @@ public interface PaymentFeignClient {
     PaymentDto createPayment(@RequestBody @Valid OrderDto orderDto);
 
     @PostMapping("/totalCost")
-    Double getTotalCost(@RequestBody @Valid OrderDto orderDto);
+    BigDecimal getTotalCost(@RequestBody @Valid OrderDto orderDto);
 
     @PostMapping("/refund")
     void paymentRefund(@RequestBody UUID orderId);
 
     @PostMapping("/productCost")
-    Double getProductCost(@RequestBody @Valid OrderDto orderDto);
+    BigDecimal getProductCost(@RequestBody @Valid OrderDto orderDto);
 
     @PostMapping("/failed")
     void paymentFailed(@RequestBody UUID orderId);

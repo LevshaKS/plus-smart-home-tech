@@ -16,6 +16,7 @@ import ru.yandex.practicum.payment.exception.NotEnoughInfoInOrderToCalculateExce
 import ru.yandex.practicum.payment.model.Payment;
 import ru.yandex.practicum.payment.repository.PaymentRepository;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,13 +45,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Double getTotalCost(OrderDto orderDto) {
+    public BigDecimal getTotalCost(OrderDto orderDto) {
         if (orderDto.getDeliveryPrice() == null) {
             log.info("оплата имеет значение null");
             throw new NotEnoughInfoInOrderToCalculateException("оплата имеет значение null");
         }
         log.info("подсчет итогового платежа {}", orderDto);
-        return orderDto.getProductPrice() + orderDto.getDeliveryPrice() + orderDto.getProductPrice() * 0.1; //+10% ндс
+        return orderDto.getProductPrice().add(orderDto.getDeliveryPrice()).add(orderDto.getProductPrice().multiply(BigDecimal.valueOf(0.1))); //+10% ндс
     }
 
     @Override
@@ -63,8 +64,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Double getProductCost(OrderDto orderDto) {
-        double result = 0.0;
+    public BigDecimal getProductCost(OrderDto orderDto) {
+        BigDecimal result = null;
         Map<UUID, Long> products = orderDto.getProducts();
         if (products == null) {
             log.info("список null");
@@ -72,7 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         for (Map.Entry<UUID, Long> values : products.entrySet()) {
             ProductDto productDto = shoppingStoreFeignClient.getProduct(values.getKey());
-            result += productDto.getPrice() * values.getValue();
+            result = result.add(productDto.getPrice().multiply(BigDecimal.valueOf(values.getValue())));
         }
         log.info("расчет итога продуктов");
         return result;

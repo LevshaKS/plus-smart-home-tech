@@ -3,7 +3,6 @@ package ru.yandex.practicum.interactionapi.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @AllArgsConstructor

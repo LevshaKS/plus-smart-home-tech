@@ -3,6 +3,7 @@ package ru.yandex.practicum.delivery.service;
 import ru.yandex.practicum.interactionapi.model.DeliveryDto;
 import ru.yandex.practicum.interactionapi.model.OrderDto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface DeliveryService {
@@ -15,5 +16,5 @@ public interface DeliveryService {
 
     void deliveryFailed(UUID deliveryId);
 
-    Double deliveryCost(OrderDto orderDto);
+    BigDecimal deliveryCost(OrderDto orderDto);
 }

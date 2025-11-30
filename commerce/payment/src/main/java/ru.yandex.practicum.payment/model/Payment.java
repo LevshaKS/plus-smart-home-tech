@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.yandex.practicum.interactionapi.enums.PaymentState;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Setter
@@ -21,10 +22,10 @@ public class Payment {
 
     private UUID orderId;
 
-    private double productTotal;
-    private double deliveryTotal;
-    private double totalPayment;
-    private double feeTotal;
+    private BigDecimal productTotal;
+    private BigDecimal deliveryTotal;
+    private BigDecimal totalPayment;
+    private BigDecimal feeTotal;
     @Enumerated(EnumType.STRING)
     private PaymentState status;
 

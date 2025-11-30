@@ -8,6 +8,7 @@ import ru.yandex.practicum.interactionapi.enums.ProductCategory;
 import ru.yandex.practicum.interactionapi.enums.ProductState;
 import ru.yandex.practicum.interactionapi.enums.QuantityState;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -26,7 +27,7 @@ public class Product {
     private String productName;
     private String description;
     private String imageSrc;
-    private double price;
+    private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     private QuantityState quantityState;

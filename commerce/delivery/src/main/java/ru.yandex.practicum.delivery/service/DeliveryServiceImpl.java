@@ -16,6 +16,7 @@ import ru.yandex.practicum.interactionapi.model.DeliveryDto;
 import ru.yandex.practicum.interactionapi.model.OrderDto;
 import ru.yandex.practicum.interactionapi.model.ShippedToDeliveryRequest;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Slf4j
@@ -68,30 +69,48 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public Double deliveryCost(OrderDto orderDto) {
+    public BigDecimal deliveryCost(OrderDto orderDto) {
         Delivery delivery = deliveryRepository.findByOrderId(orderDto.getDeliveryId()).orElseThrow(() -> new NoDeliveryFoundException("нет такой доставки "));
         AddressDto addressDto = warehouseFeignClient.getAddress();
-        double addressCost = 0.0;
+        //Умножаем базовую стоимость на число, зависящее от адреса склада
+        BigDecimal addressCost = BigDecimal.valueOf(base);
         switch (addressDto.getCity()) {
             case "ADDRESS_1":
-                addressCost = base;
+                //Если адрес склада содержит название ADDRESS_1, то умножаем на 1.
+                addressCost = addressCost.multiply(BigDecimal.ONE);
+                log.info("id заказа: " + delivery.getOrderId() + " Доставка со склада адреса 1 базовый коофицент * на 1 {}", addressCost);
                 break;
             case "ADDRESS_2":
-                addressCost = base * 2;
+                //Если адрес склада содержит название ADDRESS_2, то умножаем на 2.
+                addressCost = addressCost.multiply(BigDecimal.TWO);
+                log.info("id заказа: " + delivery.getOrderId() + " Доставка со склада адреса 2 базовый коофицент * на 2 {}", addressCost);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + addressDto.getCity());
         }
-        double deliveryCost = base + addressCost;
+        // Складываем получившийся результат с базовой стоимостью.
+        BigDecimal deliveryCost = addressCost.add(BigDecimal.valueOf(base));
+        log.info("id заказа: " + delivery.getOrderId() + " Складываем получившийся результат с базовой стоимости доставки  {}", deliveryCost);
+
         if (orderDto.isFragile()) {
-            deliveryCost += deliveryCost * 0.2;
+            //если хрупкое то результат умнажаем на 0.2
+            deliveryCost = deliveryCost.add(deliveryCost.multiply(BigDecimal.valueOf(0.2)));
+            log.info("id заказа: " + delivery.getOrderId() + " Добавили коофицент 0.2 за хрупкойсть к стоимости доставки {}", deliveryCost);
         }
-        deliveryCost += orderDto.getDeliveryWeight() * 0.3;
-        deliveryCost += orderDto.getDeliveryVolume() * 0.2;
+//Добавляем к сумме, полученной на предыдущих шагах, вес заказа, умноженный на 0.3
+        deliveryCost = deliveryCost.add(deliveryCost.multiply(BigDecimal.valueOf(orderDto.getDeliveryWeight() * 0.3)));
+        log.info("id заказа: " + delivery.getOrderId() + " Добавили к итогу вес заказа * на коофицент 0.3 {}", deliveryCost);
+
+//Складываем с полученным на прошлом шаге итогом объём, умноженный на 0.2
+        deliveryCost = deliveryCost.add(deliveryCost.multiply(BigDecimal.valueOf(orderDto.getDeliveryVolume() * 0.2)));
+        log.info("id заказа: " + delivery.getOrderId() + " Добавили к итогу объем заказа * на коофицент 0.2 {}", deliveryCost);
+
         if (!addressDto.getStreet().equals(delivery.getToAddress().getStreet())) {
-            deliveryCost += deliveryCost * 0.2;
+            // доставка на улицу не на ту же где склад
+            deliveryCost = deliveryCost.add(deliveryCost.multiply(BigDecimal.valueOf(0.2)));
+            log.info("id заказа: " + delivery.getOrderId() + " Доставка на улицу не на ту же где склад {}", deliveryCost);
         }
-        log.info("расчет доставки {}", deliveryCost);
+        log.info("id заказа: " + delivery.getOrderId() + " Расчет доставки {}", deliveryCost);
         return deliveryCost;
     }
 }

@@ -9,6 +9,7 @@ import ru.yandex.practicum.interactionapi.enums.ProductCategory;
 import ru.yandex.practicum.interactionapi.enums.ProductState;
 import ru.yandex.practicum.interactionapi.enums.QuantityState;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
@@ -35,5 +36,5 @@ public class ProductDto {
     private ProductCategory productCategory;
 
     @NotNull
-    private double price;
+    private BigDecimal price;
 }
