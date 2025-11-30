@@ -1,7 +1,7 @@
 package ru.yandex.practicum.interactionapi.model;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 
 @Getter
 @Setter

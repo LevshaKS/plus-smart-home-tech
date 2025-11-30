@@ -65,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public BigDecimal getProductCost(OrderDto orderDto) {
-        BigDecimal result = null;
+        BigDecimal result =BigDecimal.valueOf(0);
         Map<UUID, Long> products = orderDto.getProducts();
         if (products == null) {
             log.info("список null");
